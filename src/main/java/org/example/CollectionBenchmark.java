@@ -6,10 +6,10 @@ import java.util.List;
 
 public class CollectionBenchmark {
 
-    private static final int ITERATIONS = 10_000; // можно менять
+    private static final int ITERATIONS = 10_000;
 
     public static void main(String[] args) {
-        System.out.println("=== Сравнение производительности ArrayList vs LinkedList ===");
+        System.out.println("Сравнение ArrayList vs LinkedList");
         System.out.println("Количество итераций: " + ITERATIONS);
         System.out.println();
 
@@ -28,17 +28,17 @@ public class CollectionBenchmark {
                 list.add(i);
             }
         });
-        results.add(new BenchmarkResult(listType + " add(end)", ITERATIONS, time));
+        results.add(new BenchmarkResult(listType + " add(в конец)", ITERATIONS, time));
         list.clear();
 
-        // 2. Тест add (в начало) — ТОЛЬКО если List поддерживает add(0, element)
+        // 2. Тест add (в начало)
         if (list instanceof ArrayList || list instanceof LinkedList) {
             time = measureTime(() -> {
                 for (int i = 0; i < ITERATIONS; i++) {
                     list.add(0, i);
                 }
             });
-            results.add(new BenchmarkResult(listType + " add(begin)", ITERATIONS, time));
+            results.add(new BenchmarkResult(listType + " add(в начало)", ITERATIONS, time));
             list.clear();
         }
 
@@ -48,7 +48,7 @@ public class CollectionBenchmark {
                 list.add(list.size() / 2, i);
             }
         });
-        results.add(new BenchmarkResult(listType + " add(middle)", ITERATIONS, time));
+        results.add(new BenchmarkResult(listType + " add(в середину)", ITERATIONS, time));
         list.clear();
 
         // 4. Заполняем для тестов get и delete
@@ -70,7 +70,7 @@ public class CollectionBenchmark {
                 list.remove(0);
             }
         });
-        results.add(new BenchmarkResult(listType + " delete(begin)", ITERATIONS, time));
+        results.add(new BenchmarkResult(listType + " delete(из начала)", ITERATIONS, time));
 
         // Перезаполняем
         for (int i = 0; i < ITERATIONS; i++) list.add(i);
@@ -81,9 +81,8 @@ public class CollectionBenchmark {
                 list.remove(list.size() / 2);
             }
         });
-        results.add(new BenchmarkResult(listType + " delete(middle)", ITERATIONS, time));
+        results.add(new BenchmarkResult(listType + " delete(из середины)", ITERATIONS, time));
 
-        // Перезаполняем
         for (int i = 0; i < ITERATIONS; i++) list.add(i);
 
         // 8. Тест delete (из конца)
@@ -92,7 +91,7 @@ public class CollectionBenchmark {
                 list.remove(list.size() - 1);
             }
         });
-        results.add(new BenchmarkResult(listType + " delete(end)", ITERATIONS, time));
+        results.add(new BenchmarkResult(listType + " delete(из конца)", ITERATIONS, time));
 
         return results;
     }
@@ -106,7 +105,6 @@ public class CollectionBenchmark {
     private static void printResults(List<BenchmarkResult> arrayResults,
                                      List<BenchmarkResult> linkedResults) {
         System.out.println("Метод                | Итераций   | Время выполнения");
-        System.out.println("---------------------+------------+------------------");
 
         for (int i = 0; i < arrayResults.size(); i++) {
             BenchmarkResult ar = arrayResults.get(i);
@@ -114,10 +112,6 @@ public class CollectionBenchmark {
 
             System.out.println(ar);
             System.out.println(lr);
-            System.out.println("---------------------+------------+------------------");
         }
-
-        System.out.println("\nПримечание: для add(begin) и delete(begin) LinkedList должен быть быстрее.");
-        System.out.println("Для get и delete(middle) ArrayList обычно быстрее.");
     }
 }
